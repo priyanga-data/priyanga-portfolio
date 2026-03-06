@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priyanga S — Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --surface: #0d0d12;
+    --card: #111118;
+    --border: #1e1e2a;
+    --accent: #64ffda;
+    --accent2: #ff6b6b;
+    --accent3: #ffd93d;
+    --text: #e8e8f0;
+    --muted: #6b6b85;
+    --gradient: linear-gradient(135deg, #64ffda, #0070f3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    position: fixed; pointer-events: none; z-index: 9999;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent); border-radius: 50%;
+    position: fixed; pointer-events: none; z-index: 9998; opacity: 0.5;
+  }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1; opacity: 0.4;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px; display: flex; justify-content: space-between; align-items: center;
+    background: rgba(5,5,8,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 120px 48px 80px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(100,255,218,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,112,243,0.06) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(100,255,218,0.025) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(100,255,218,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 820px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); border: 1px solid rgba(100,255,218,0.2);
+    padding: 6px 14px; border-radius: 2px; margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.1s both;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.8);} }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900; line-height: 0.95; letter-spacing: -3px;
+    margin-bottom: 24px; animation: fadeUp 0.8s 0.2s both;
+  }
+  .hero h1 .role { font-style: italic; font-weight: 300; color: var(--accent); display: block; }
+
+  .hero-desc {
+    font-size: 0.82rem; color: var(--muted); line-height: 1.9;
+    max-width: 560px; margin-bottom: 40px; animation: fadeUp 0.8s 0.3s both;
+  }
+  .hero-desc span { color: var(--accent); }
+
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.8s 0.4s both; }
+
+  .btn-primary {
+    background: var(--accent); color: #000; font-family: 'DM Mono', monospace;
+    font-size: 0.78rem; font-weight: 500; padding: 14px 28px; border: none;
+    border-radius: 2px; cursor: none; text-decoration: none; letter-spacing: 1px;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent; color: var(--accent); font-family: 'DM Mono', monospace;
+    font-size: 0.78rem; padding: 14px 28px; border: 1px solid rgba(100,255,218,0.3);
+    border-radius: 2px; cursor: none; text-decoration: none; letter-spacing: 1px;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--accent); background: rgba(100,255,218,0.05); transform: translateY(-2px); }
+
+  .hero-stats {
+    position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 14px;
+    animation: fadeLeft 0.8s 0.5s both;
+  }
+  @keyframes fadeLeft { from{opacity:0;transform:translateY(-50%) translateX(30px);} to{opacity:1;transform:translateY(-50%) translateX(0);} }
+
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 16px 20px; border-radius: 4px; text-align: center; min-width: 100px; transition: all 0.3s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateX(-4px); }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--accent); display: block; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 0.58rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+
+  section { padding: 100px 48px; position: relative; }
+
+  .section-label {
+    font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.4; }
+
+  .section-title {
+    font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700; letter-spacing: -1px; margin-bottom: 52px; line-height: 1.1;
+  }
+
+  /* INTERNSHIPS */
+  .internship-banner { background: var(--surface); padding: 80px 48px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .internship-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .internship-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 4px;
+    padding: 28px; position: relative; overflow: hidden; transition: all 0.3s;
+  }
+  .internship-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient); }
+  .internship-card:hover { border-color: rgba(100,255,218,0.2); transform: translateY(-4px); }
+
+  .int-type { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .int-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 5px; }
+  .int-company { font-size: 0.7rem; color: var(--accent3); margin-bottom: 14px; }
+  .int-points { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .int-points li { font-size: 0.7rem; color: var(--muted); padding-left: 14px; position: relative; line-height: 1.5; }
+  .int-points li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.6rem; }
+
+  /* SKILLS */
+  .skills-section { background: var(--bg); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 14px; }
+
+  .skill-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 20px; border-radius: 4px; transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .skill-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 2px; background: var(--accent);
+    transition: width 1.2s cubic-bezier(.4,0,.2,1) 0.2s;
+  }
+  .skill-card.animated::after { width: var(--pct); }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  .skill-icon { font-size: 1.3rem; margin-bottom: 10px; }
+  .skill-name { font-size: 0.8rem; font-weight: 500; margin-bottom: 5px; }
+  .skill-level { font-size: 0.58rem; color: var(--muted); }
+  .skill-badge { font-size: 0.58rem; color: var(--accent); margin-top: 6px; display: inline-block; }
+
+  /* PROJECTS */
+  .projects-section { background: var(--surface); }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+
+  .project-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px; transition: all 0.3s;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .project-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gradient); transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .project-card:hover { border-color: rgba(100,255,218,0.2); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-num { font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 900; color: rgba(100,255,218,0.06); position: absolute; top: 12px; right: 20px; line-height: 1; }
+  .project-tag { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: block; }
+  .project-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+  .project-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.7; margin-bottom: 14px; flex: 1; }
+
+  .project-highlights { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .highlight { font-size: 0.66rem; color: var(--accent3); display: flex; align-items: flex-start; gap: 6px; }
+  .highlight::before { content: '★'; font-size: 0.52rem; margin-top: 2px; flex-shrink: 0; }
+
+  .project-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .ptag { font-size: 0.58rem; padding: 3px 8px; border: 1px solid var(--border); border-radius: 2px; color: var(--muted); }
+  .project-date { font-size: 0.58rem; color: var(--muted); margin-top: 12px; opacity: 0.5; }
+
+  /* CERTIFICATES */
+  .certs-section { background: var(--bg); }
+  .certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+
+  .cert-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px; transition: all 0.3s;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .cert-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .cert-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .cert-name { font-size: 0.76rem; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+  .cert-issuer { font-size: 0.6rem; color: var(--accent); }
+
+  /* EDUCATION */
+  .edu-section { background: var(--surface); }
+  .edu-timeline { display: flex; flex-direction: column; gap: 16px; max-width: 720px; }
+
+  .edu-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 22px 26px; border-radius: 0 4px 4px 0; transition: all 0.3s;
+  }
+  .edu-card:hover { background: rgba(100,255,218,0.02); transform: translateX(6px); }
+  .edu-degree { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 5px; }
+  .edu-school { font-size: 0.72rem; color: var(--accent); margin-bottom: 8px; }
+  .edu-meta { display: flex; gap: 20px; font-size: 0.66rem; color: var(--muted); flex-wrap: wrap; }
+  .edu-score { color: var(--accent3); font-weight: 500; }
+
+  /* CONTACT */
+  .contact-section { text-align: center; background: var(--bg); position: relative; overflow: hidden; }
+  .contact-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(100,255,218,0.04) 0%, transparent 70%); }
+  .contact-inner { position: relative; z-index: 2; }
+
+  .contact-email {
+    font-family: 'Fraunces', serif; font-size: clamp(1rem, 2.2vw, 1.6rem); font-weight: 700;
+    color: var(--accent); text-decoration: none; display: inline-block;
+    margin: 20px 0 36px; border-bottom: 1px solid rgba(100,255,218,0.3);
+    padding-bottom: 4px; transition: border-color 0.2s; word-break: break-all;
+  }
+  .contact-email:hover { border-color: var(--accent); }
+
+  .social-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .social-link {
+    display: flex; align-items: center; gap: 8px; font-size: 0.68rem;
+    color: var(--muted); text-decoration: none; border: 1px solid var(--border);
+    padding: 10px 16px; border-radius: 2px; transition: all 0.2s;
+  }
+  .social-link:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+
+  footer {
+    padding: 22px 48px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.6rem; color: var(--muted); flex-wrap: wrap; gap: 8px;
+  }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { gap: 14px; }
+    .nav-links a { font-size: 0.6rem; }
+    .hero { padding: 100px 20px 60px; }
+    .hero-stats { display: none; }
+    .hero h1 { letter-spacing: -1px; }
+    section { padding: 64px 20px; }
+    .internship-banner { padding: 60px 20px; }
+    .internship-grid { grid-template-columns: 1fr; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">PS.</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Open to: Data Analyst · Business Analyst · Power BI Developer · ETL Developer · MIS Executive · ML Engineer</div>
+    <h1>
+      Priyanga S.
+      <span class="role">Data Analyst</span>
+    </h1>
+    <p class="hero-desc">
+      B.Tech Information Technology graduate with hands-on experience in
+      <span>SQL, Power BI, ETL processes</span> and dashboard reporting.
+      Passionate about transforming raw data into meaningful insights to support
+      <span>banking &amp; business decision-making</span>.
+      Strong understanding of data cleaning, KPI reporting, and data integrity.
+    </p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">View Projects →</a>
+      <a href="#contact" class="btn-outline">Hire Me</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card"><span class="stat-num">8.3</span><span class="stat-label">CGPA</span></div>
+    <div class="stat-card"><span class="stat-num">2</span><span class="stat-label">Internships</span></div>
+    <div class="stat-card"><span class="stat-num">4</span><span class="stat-label">Projects</span></div>
+    <div class="stat-card"><span class="stat-num">5</span><span class="stat-label">Certificates</span></div>
+  </div>
+</section>
+
+<!-- INTERNSHIPS -->
+<div class="internship-banner" id="experience">
+  <div class="section-label" style="justify-content:center;margin-bottom:36px">02 // Real Work Experience</div>
+  <div class="internship-grid">
+    <div class="internship-card reveal">
+      <div class="int-type">Data Analytics Internship</div>
+      <div class="int-title">Data Analytics Intern</div>
+      <div class="int-company">NoviTech R&amp;D Private Limited · Oct – Dec 2024</div>
+      <ul class="int-points">
+        <li>Processed and cleaned 5,000+ structured records for weekly KPI reporting</li>
+        <li>Contributed to 3 internal dashboard reports tracking performance metrics</li>
+        <li>Extracted meaningful insights from structured datasets</li>
+      </ul>
+    </div>
+    <div class="internship-card reveal">
+      <div class="int-type">Full Stack Web Development</div>
+      <div class="int-title">Web Development Intern</div>
+      <div class="int-company">Ethical Edufabrica Pvt. Ltd. × IIT Roorkee · Jul – Aug 2024</div>
+      <ul class="int-points">
+        <li>Developed responsive web components using JavaScript</li>
+        <li>Backend integration and system stability improvements</li>
+        <li>Resolved 10+ minor backend issues to improve performance</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-label">03 // Technical Arsenal</div>
+  <h2 class="section-title reveal">Skills &amp;<br><em style="font-style:italic;color:var(--accent)">Tools</em></h2>
+  <div class="skills-grid">
+    <div class="skill-card reveal" style="--pct:90%"><div class="skill-icon">🗄️</div><div class="skill-name">SQL / MySQL</div><div class="skill-level">Queries · Joins · Validation</div><div class="skill-badge">Advanced</div></div>
+    <div class="skill-card reveal" style="--pct:88%"><div class="skill-icon">📊</div><div class="skill-name">Power BI</div><div class="skill-level">Dashboards · DAX · KPI</div><div class="skill-badge">Advanced</div></div>
+    <div class="skill-card reveal" style="--pct:86%"><div class="skill-icon">📗</div><div class="skill-name">Excel</div><div class="skill-level">Power Query · Pivot · Charts</div><div class="skill-badge">Advanced</div></div>
+    <div class="skill-card reveal" style="--pct:83%"><div class="skill-icon">🔄</div><div class="skill-name">ETL Processes</div><div class="skill-level">Extract · Transform · Load</div><div class="skill-badge">Intermediate+</div></div>
+    <div class="skill-card reveal" style="--pct:78%"><div class="skill-icon">🐍</div><div class="skill-name">Python</div><div class="skill-level">Data Analysis · Pandas</div><div class="skill-badge">Intermediate</div></div>
+    <div class="skill-card reveal" style="--pct:85%"><div class="skill-icon">🧹</div><div class="skill-name">Data Cleaning</div><div class="skill-level">Transformation · Integrity</div><div class="skill-badge">Advanced</div></div>
+    <div class="skill-card reveal" style="--pct:80%"><div class="skill-icon">📈</div><div class="skill-name">KPI Reporting</div><div class="skill-level">Dashboards · Metrics</div><div class="skill-badge">Intermediate+</div></div>
+    <div class="skill-card reveal" style="--pct:70%"><div class="skill-icon">🤖</div><div class="skill-name">Machine Learning</div><div class="skill-level">SHAP · LIME · XAI</div><div class="skill-badge">Intermediate</div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects-section" id="projects">
+  <div class="section-label">04 // What I've Built</div>
+  <h2 class="section-title reveal">Featured<br><em style="font-style:italic;color:var(--accent)">Projects</em></h2>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-num">01</div>
+      <span class="project-tag">ETL · Data Quality · In Development</span>
+      <h3 class="project-title">DataLoss Detective – Schema-Aware Data Quality Assessment Framework</h3>
+      <p class="project-desc">Automated a backend system to perform ETL operations on relational database records. Conducted metadata analysis and statistical profiling to detect anomalies and ensure data integrity.</p>
+      <div class="project-highlights">
+        <div class="highlight">SQL validation checks for improved data integrity</div>
+        <div class="highlight">Analytical reports supporting data-driven decisions</div>
+      </div>
+      <div class="project-tags">
+        <span class="ptag">SQL</span><span class="ptag">ETL</span><span class="ptag">Python</span><span class="ptag">Data Validation</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">02</div>
+      <span class="project-tag">AI · Cybersecurity · IoT</span>
+      <h3 class="project-title">Explainable AI for Cybersecurity Threat Detection in Zero-Trust / IoT Network</h3>
+      <p class="project-desc">Designed an XAI-based Intrusion Detection System for IoT environments using ML/DL models with SHAP &amp; LIME for transparent, interpretable security decisions.</p>
+      <div class="project-highlights">
+        <div class="highlight">92% detection accuracy on simulated IoT traffic</div>
+        <div class="highlight">Risk-based anomaly evaluation approach</div>
+      </div>
+      <div class="project-tags">
+        <span class="ptag">Python</span><span class="ptag">ML/DL</span><span class="ptag">SHAP</span><span class="ptag">LIME</span><span class="ptag">XAI</span>
+      </div>
+      <div class="project-date">Dec 2025 — Jan 2026</div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">03</div>
+      <span class="project-tag">Analytics · Power BI · Education</span>
+      <h3 class="project-title">Student Performance &amp; Attendance Analysis</h3>
+      <p class="project-desc">Built 6 interactive Power BI dashboards tracking student KPIs. Performed data cleaning via Power Query, wrote SQL to extract data from MySQL, and applied DAX formulas for performance metrics.</p>
+      <div class="project-highlights">
+        <div class="highlight">6 interactive dashboards created</div>
+        <div class="highlight">Automated reporting workflow built</div>
+      </div>
+      <div class="project-tags">
+        <span class="ptag">Power BI</span><span class="ptag">SQL</span><span class="ptag">DAX</span><span class="ptag">Excel</span><span class="ptag">Power Query</span>
+      </div>
+      <div class="project-date">May 2023 — Jun 2023</div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">04</div>
+      <span class="project-tag">Web · JavaScript · Social Impact</span>
+      <h3 class="project-title">Orphanage Support System</h3>
+      <p class="project-desc">Engineered a JavaScript-based application to digitalize orphanage operations — managing donors, communication, and 100+ structured records through automated data storage.</p>
+      <div class="project-highlights">
+        <div class="highlight">100+ structured records managed</div>
+        <div class="highlight">Reduced manual record management efforts</div>
+      </div>
+      <div class="project-tags">
+        <span class="ptag">JavaScript</span><span class="ptag">Node.js</span><span class="ptag">File Handling</span>
+      </div>
+      <div class="project-date">Nov 2025 — Dec 2025</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATES -->
+<section class="certs-section" id="certs">
+  <div class="section-label">05 // Credentials</div>
+  <h2 class="section-title reveal">Certificates &amp;<br><em style="font-style:italic;color:var(--accent)">Learning</em></h2>
+  <div class="certs-grid">
+    <div class="cert-card reveal"><div class="cert-icon">🏅</div><div><div class="cert-name">Data Analytics With Python</div><div class="cert-issuer">NPTEL</div></div></div>
+    <div class="cert-card reveal"><div class="cert-icon">🍃</div><div><div class="cert-name">Fundamentals of Data Transformation</div><div class="cert-issuer">MongoDB</div></div></div>
+    <div class="cert-card reveal"><div class="cert-icon">🐍</div><div><div class="cert-name">Python Programming</div><div class="cert-issuer">GUVI</div></div></div>
+    <div class="cert-card reveal"><div class="cert-icon">📗</div><div><div class="cert-name">Excel for Beginners</div><div class="cert-issuer">Great Learning</div></div></div>
+    <div class="cert-card reveal"><div class="cert-icon">📊</div><div><div class="cert-name">Power BI</div><div class="cert-issuer">Microsoft Learn</div></div></div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="edu-section" id="education">
+  <div class="section-label">06 // Academic Background</div>
+  <h2 class="section-title reveal">Education &amp;<br><em style="font-style:italic;color:var(--accent)">Scores</em></h2>
+  <div class="edu-timeline">
+    <div class="edu-card reveal">
+      <div class="edu-degree">B.Tech — Information Technology</div>
+      <div class="edu-school">Dhanalakshmi Srinivasan Engineering College, Perambalur, Tamil Nadu</div>
+      <div class="edu-meta"><span>2022 — 2026</span><span>Full Time</span><span class="edu-score">CGPA: 8.3 / 10 (83%)</span></div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-degree">HSC — Class XII</div>
+      <div class="edu-school">Dharani Matric. Hr. Sec School, Thiruvarur, Tamil Nadu</div>
+      <div class="edu-meta"><span>Passed 2022</span><span class="edu-score">78%</span></div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-degree">SSLC — Class X</div>
+      <div class="edu-school">Dharani Matric. Hr. Sec School, Thiruvarur, Tamil Nadu</div>
+      <div class="edu-meta"><span>Passed 2020</span><span class="edu-score">84.6%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="section-label" style="justify-content:center">07 // Let's Work Together</div>
+    <h2 class="section-title reveal" style="margin-bottom:8px">Open to<br><em style="font-style:italic;color:var(--accent)">Opportunities</em></h2>
+    <p style="color:var(--muted);font-size:0.76rem;margin-bottom:4px">Data Analyst · Business Analyst · Power BI Developer · ETL Developer · MIS Executive · ML Engineer</p>
+    <a href="mailto:priyangasathiyamoorthy@gmail.com" class="contact-email">priyangasathiyamoorthy@gmail.com</a>
+    <div class="social-links">
+      <a href="tel:8838065112" class="social-link">📞 8838065112</a>
+      <a href="https://www.linkedin.com/in/priyangasathiyamoorthy" target="_blank" class="social-link">💼 LinkedIn</a>
+      <a href="#" class="social-link">📍 Chennai, Tamil Nadu</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Priyanga S. — Data Analyst</span>
+  <span style="color:var(--accent)">Chennai, India · Open to work</span>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.classList.add('visible');
+          if (e.target.classList.contains('skill-card')) e.target.classList.add('animated');
+        }, i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
